@@ -1,0 +1,25 @@
+# Build artifacts
+/build/
+/CMakeFiles/
+/CMakeCache.txt
+/*.cmake
+/*.o
+/*.obj
+/*.exe
+/*.out
+
+# Unity test build artifacts
+/tests/Unity/*.o
+/tests/Unity/run_tests
+
+# IDE and editor files
+*.swp
+*~
+.vscode/
+.idea/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
