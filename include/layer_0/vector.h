@@ -8,6 +8,8 @@
 
 #include <stddef.h>
 
+#define VECTOR_GROWTH_FACTOR 2
+
 /**
  * @typedef vector_data_t
  * @brief The type of elements stored in the vector.
@@ -29,7 +31,11 @@ typedef struct {
   size_t capacity; /**< Total allocated capacity of the vector */
 } Vector;
 
+// -- memory and contructor --
 Vector *new_vector(size_t initial_capacity);
 void vector_free(Vector *v);
+
+// -- utility functions --
+void vector_push(Vector *v, vector_data_t d);
 
 #endif /* MY_VECTOR_H */

@@ -16,7 +16,7 @@
  */
 Vector *new_vector(size_t initial_capacity) {
   Vector *new_vector;
-  if (initial_capacity == 0)
+  if (initial_capacity <= 0)
     return (NULL);
 
   // initialization of new_vector
@@ -56,4 +56,35 @@ void vector_free(Vector *v) {
 
   free(v->data);
   free(v);
+}
+
+/**
+ * @brief Appends an element to the end of the vector, resizing if necessary.
+ *
+ * If the vector's current size equals its capacity, the internal storage
+ * is automatically reallocated with a growth factor of VECTOR_GROWTH_FACTOR.
+ *
+ * @param v Pointer to the vector to push into.
+ * @param d The element to append to the vector.
+ *
+ * @note If the vector pointer is NULL or memory allocation fails during
+ *       resizing, the function does nothing.
+ */
+void vector_push(Vector *v, vector_data_t d) {
+  vector_data_t *new_data;
+
+  if (v == NULL)
+    return;
+
+  if (v->size == v->capacity) {
+    new_data = realloc(v->data, sizeof(vector_data_t) * v->capacity *
+                                    VECTOR_GROWTH_FACTOR);
+    if (new_data == NULL)
+      return;
+
+    v->capacity *= VECTOR_GROWTH_FACTOR;
+    v->data = new_data;
+  }
+
+  v->data[v->size++] = d;
 }
