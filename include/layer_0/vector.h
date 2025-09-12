@@ -33,9 +33,9 @@ typedef struct {
 
 // -- memory and contructor --
 Vector *new_vector(size_t initial_capacity);
-void vector_free(Vector *v);
+void vector_free(Vector *vector);
 
 // -- utility functions --
-void vector_push(Vector *v, vector_data_t d);
+void vector_push(Vector *vector, vector_data_t data);
 
 #endif /* MY_VECTOR_H */
