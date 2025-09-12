@@ -7,6 +7,7 @@ void tearDown(void) {}
 void test_new_vector(void) {
   Vector *v = new_vector(12);
   TEST_ASSERT_NOT_NULL(v);
+  vector_free(v);
 }
 
 void test_new_vector_invalid(void) {
