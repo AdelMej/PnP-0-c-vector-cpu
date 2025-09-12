@@ -89,4 +89,4 @@ void vector_push(Vector *v, vector_data_t d) {
   v->data[v->size++] = d;
 }
 
-void vector_set(Vector *v, size_t idx, vector_data_t d) {}
+void vector_pop(Vector *v) {}
