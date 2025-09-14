@@ -17,7 +17,7 @@ void tearDown(void) {
 void test_vector_push_basic(void) {
   vector_data_t d = 12.0;
 
-  vector_push(test, d);
+  TEST_ASSERT_EQUAL(VECTOR_OK, vector_push(test, d));
   TEST_ASSERT_EQUAL_DOUBLE(12.0, test->data[0]);
   TEST_ASSERT_EQUAL_UINT(1, test->size);
   TEST_ASSERT_EQUAL_UINT(1, test->capacity);
@@ -26,7 +26,7 @@ void test_vector_push_basic(void) {
 void test_vector_push_negative(void) {
   vector_data_t d = -12.0;
 
-  vector_push(test, d);
+  TEST_ASSERT_EQUAL(VECTOR_OK, vector_push(test, d));
   TEST_ASSERT_EQUAL_DOUBLE(-12.0, test->data[0]);
   TEST_ASSERT_EQUAL_UINT(1, test->size);
   TEST_ASSERT_EQUAL_UINT(1, test->capacity);
@@ -54,7 +54,7 @@ void test_vector_push_doubling(void) {
 void test_vector_push_null(void) {
   vector_data_t d = 3.12;
 
-  vector_push(NULL, d);
+  TEST_ASSERT_EQUAL(VECTOR_ERR_NULL, vector_push(NULL, d));
 }
 
 int main(void) {
