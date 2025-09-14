@@ -1,6 +1,7 @@
 #include "layer_0/vector.h"
 #include <stddef.h>
 #include <stdlib.h>
+#include <string.h>
 
 /**
  * @brief Creates a new dynamic vector.
@@ -59,34 +60,287 @@ void vector_free(Vector *v) {
 }
 
 /**
- * @brief Appends an element to the end of the vector, resizing if necessary.
+ * @brief Appends an element to the end of the vector, resizing if necessary
  *
- * If the vector's current size equals its capacity, the internal storage
- * is automatically reallocated with a growth factor of VECTOR_GROWTH_FACTOR.
+ * If the vector's current size equals its capacity, the internal storage is
+ * automatically reallocated with a growth factor of VECTOR_GROWTH_FACTOR.
  *
- * @param v Pointer to the vector to push into.
- * @param d The element to append to the vector.
+ * @param v Pointer to the vector to push into
+ * @param d Element to append to the vector
  *
- * @note If the vector pointer is NULL or memory allocation fails during
- *       resizing, the function does nothing.
+ * @return VECTOR_OK on success
+ * @return VECTOR_ERR_NULL if the vector pointer is NULL
+ * @return VECTOR_ERR_ALLOC if memory allocation fails during resizing
+ *
+ * @note After a successful push, v->size is incremented by 1.
+ * @note The vector grows automatically; the caller does not need to manage
+ * capacity.
  */
-void vector_push(Vector *v, vector_data_t d) {
+int vector_push(Vector *v, vector_data_t d) {
   vector_data_t *new_data;
 
   if (v == NULL)
-    return;
+    return VECTOR_ERR_NULL;
 
   if (v->size == v->capacity) {
     new_data = realloc(v->data, sizeof(vector_data_t) * v->capacity *
                                     VECTOR_GROWTH_FACTOR);
     if (new_data == NULL)
-      return;
+      return VECTOR_ERR_ALLOC;
 
     v->capacity *= VECTOR_GROWTH_FACTOR;
     v->data = new_data;
   }
 
   v->data[v->size++] = d;
+  return VECTOR_OK;
 }
 
-void vector_pop(Vector *v) {}
+/**
+ * @brief Sets the element at a specific index in the vector
+ *
+ * If the index is valid, the element at that position is overwritten with the
+ * provided value.
+ *
+ * @param v Pointer to the vector to modify
+ * @param idx Index of the element to set
+ * @param d New value to store at the given index
+ *
+ * @return VECTOR_OK on success
+ * @return VECTOR_ERR_NULL if the vector pointer is NULL
+ * @return VECTOR_ERR_OOB if the index is out of bounds (>= vector size)
+ *
+ * @note This function does not resize the vector. The index must be within the
+ * current size.
+ */
+int vector_set(Vector *v, size_t idx, vector_data_t d) {
+  if (v == NULL)
+    return VECTOR_ERR_NULL;
+
+  if (idx >= v->size)
+    return VECTOR_ERR_OOB;
+
+  v->data[idx] = d;
+  return VECTOR_OK;
+}
+
+/**
+ * @brief Retrieves the element at a specific index in the vector
+ *
+ * The value at the given index is stored in the location pointed to by `out`.
+ * This function does not modify the vector.
+ *
+ * @param v Pointer to the vector
+ * @param idx Index of the element to retrieve
+ * @param out Pointer to store the retrieved element
+ * @return VECTOR_OK on success
+ * @return VECTOR_ERR_NULL if `v` or `out` is NULL
+ * @return VECTOR_ERR_OOB if `idx` is out of bounds (>= vector size)
+ *
+ * @note This function is safe for all possible values of vector_data_t
+ */
+int vector_get(Vector *v, size_t idx, vector_data_t *out) {
+  if (v == NULL)
+    return VECTOR_ERR_NULL;
+
+  if (idx >= v->size)
+    return VECTOR_ERR_OOB;
+
+  *out = v->data[idx];
+  return VECTOR_OK;
+}
+
+/**
+ * @brief Removes and retrieves the last element from the vector
+ *
+ * The last element is stored in the location pointed to by `out`.
+ * The vector size is decremented by one.
+ *
+ * @param v Pointer to the vector
+ * @param out Pointer to store the removed element
+ * @return VECTOR_OK on success
+ * @return VECTOR_ERR_NULL if `v` or `out` is NULL
+ * @return VECTOR_ERR_EMPTY if the vector is empty
+ *
+ * @note Safe for all values of vector_data_t.
+ */
+int vector_pop(Vector *v, vector_data_t *out) {
+  if (v == NULL)
+    return VECTOR_ERR_NULL;
+
+  if (v->size == 0)
+    return VECTOR_ERR_EMPTY;
+
+  *out = v->data[--v->size];
+  return VECTOR_OK;
+}
+
+/**
+ * @brief Returns the last element of the vector without removing it
+ *
+ * The element is stored in the location pointed to by `out`.
+ * The vector size is not modified.
+ *
+ * @param v Pointer to the vector
+ * @param out Pointer to store the element
+ * @return VECTOR_OK on success
+ * @return VECTOR_ERR_NULL if `v` or `out` is NULL
+ * @return VECTOR_ERR_EMPTY if the vector is empty
+ *
+ * @note Safe for all values of vector_data_t.
+ */
+int vector_back(Vector *v, vector_data_t *out) {
+  if (v == NULL)
+    return VECTOR_ERR_NULL;
+
+  if (v->size == 0)
+    return VECTOR_ERR_EMPTY;
+
+  *out = v->data[v->size - 1];
+  return VECTOR_OK;
+}
+
+/**
+ * @brief Clears all elements from the vector
+ *
+ * Sets the vector's size to 0 while keeping the allocated memory intact.
+ * This allows the vector to be reused without reallocating memory.
+ *
+ * @param v Pointer to the vector to clear
+ * @return VECTOR_OK on success
+ * @return VECTOR_ERR_NULL if the vector pointer is NULL
+ */
+int vector_clear(Vector *v) {
+  if (v == NULL)
+    return VECTOR_ERR_NULL;
+
+  v->size = 0;
+  return VECTOR_OK;
+}
+
+/**
+ * @brief Creates a copy of the given vector
+ *
+ * Allocates a new vector and duplicates the contents of the original vector.
+ * The new vector has the same size and capacity as the source vector.
+ *
+ * @param v Pointer to the vector to copy
+ * @return Pointer to the newly allocated copy on success
+ * @return NULL if the input vector is NULL or memory allocation fails
+ *
+ * @note The caller is responsible for freeing the returned vector using
+ * vector_free().
+ */
+Vector *vector_copy(Vector *v) {
+  Vector *copy;
+
+  if (v == NULL)
+    return NULL;
+
+  copy = malloc(sizeof(Vector));
+  if (copy == NULL)
+    return NULL;
+
+  copy->data = malloc(sizeof(vector_data_t) * v->capacity);
+  if (copy->data == NULL) {
+    free(copy);
+    return NULL;
+  }
+
+  copy->capacity = v->capacity;
+  copy->size = v->size;
+  memcpy(copy->data, v->data, sizeof(vector_data_t) * v->size);
+
+  return copy;
+}
+
+/**
+ * @brief Resize the capacity of a vector.
+ *
+ * Attempts to change the vector's internal storage capacity to the new value.
+ * - If `resize` is larger than the current capacity, the buffer is expanded.
+ * - If `resize` is smaller than the current capacity, the buffer is shrunk.
+ *   If this causes `size > capacity`, the vector's size will be clamped
+ *   to the new capacity.
+ *
+ * @note A capacity of `0` is invalid. The minimum allowed capacity is `1`.
+ *
+ * @param v Pointer to the vector to resize.
+ * @param resize New capacity (must be >= 1).
+ *
+ * @return VECTOR_OK on success.
+ * @return VECTOR_ERR_NULL if @p v is NULL.
+ * @return VECTOR_ERR_ALLOC if memory allocation fails.
+ * @return VECTOR_ERR_OOB if @p resize == 0.
+ */
+int vector_resize(Vector *v, size_t resize) {
+  vector_data_t *temp;
+
+  if (v == NULL)
+    return VECTOR_ERR_NULL;
+
+  if (resize == 0)
+    return VECTOR_ERR_OOB;
+
+  temp = realloc(v->data, sizeof(vector_data_t) * resize);
+  if (temp == NULL)
+    return VECTOR_ERR_ALLOC;
+
+  v->data = temp;
+  v->capacity = resize;
+
+  if (v->size > v->capacity)
+    v->size = v->capacity;
+
+  return VECTOR_OK;
+}
+
+/**
+ * @brief Get the current number of elements stored in the vector.
+ *
+ * This function stores the number of elements in the given vector in the
+ * variable pointed to by `out`.
+ *
+ * @param v Pointer to the vector.
+ * @param out Pointer to a size_t variable where the size will be stored.
+ * @return VECTOR_OK if successful, VECTOR_ERR_NULL if v or out is NULL.
+ */
+int vector_size(Vector *v, size_t *out) {
+  if (v == NULL || out == NULL)
+    return VECTOR_ERR_NULL;
+
+  *out = v->size;
+  return VECTOR_OK;
+}
+
+/**
+ * @brief Get the current capacity of the vector.
+ *
+ * This function stores the capacity of the given vector in the variable
+ * pointed to by `out`.
+ *
+ * @param v Pointer to the vector.
+ * @param out Pointer to a size_t variable where the capacity will be stored.
+ * @return VECTOR_OK if successful, VECTOR_ERR_NULL if v or out is NULL.
+ */
+int vector_capacity(Vector *v, size_t *out) {
+  if (v == NULL || out == NULL)
+    return VECTOR_ERR_NULL;
+
+  *out = v->capacity;
+  return VECTOR_OK;
+}
+
+/**
+ * @brief Check if the vector is empty.
+ *
+ * @param v Pointer to the vector.
+ * @return 1 if the vector is empty, 0 if it has elements, VECTOR_ERR_NULL if v
+ * is NULL.
+ */
+int vector_empty(Vector *v) {
+  if (v == NULL)
+    return 0;
+
+  return (v->size == 0);
+}
