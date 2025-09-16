@@ -19,6 +19,7 @@
 #define VECTOR_ERR_ALLOC 2 /**< Memory allocation failed */
 #define VECTOR_ERR_NULL 3  /**< Null pointer passed */
 #define VECTOR_ERR_EMPTY 4 /**< Vector is empty */
+#define VECTOR_ERR_SIZE 5  /**< Vector size mismatch */
 //@}
 
 /**
@@ -35,10 +36,26 @@
 typedef double vector_data_t;
 
 /**
- * @typedef vector_data_t
- * @brief The type of elements stored in the vector.
+ * @struct Vector
+ * @brief Dynamic array structure for storing numerical data.
  *
- * Currently defined as double for AI and numerical computations.
+ * The `Vector` struct represents a resizable array of elements of type
+ * `vector_data_t` (currently defined as `double`). It tracks both the
+ * number of elements currently stored and the total allocated capacity.
+ * This structure is used with the dynamic vector library functions to
+ * perform operations like push, pop, insert, remove, and mathematical
+ * computations.
+ *
+ * @var Vector::data
+ * Pointer to the dynamically allocated array holding the elements.
+ *
+ * @var Vector::size
+ * The current number of elements stored in the vector. Always <= capacity.
+ *
+ * @var Vector::capacity
+ * The total number of elements the vector can hold without resizing.
+ * When capacity is reached, the vector can be automatically resized
+ * according to VECTOR_GROWTH_FACTOR.
  */
 typedef struct {
   vector_data_t
@@ -163,7 +180,7 @@ Vector *vector_copy(Vector *vector);
  * @return VECTOR_ERR_NULL if the vector pointer is NULL
  * @return VECTOR_ERR_ALLOC if memory allocation fails
  */
-int vector_resize(Vector *vector, size_t resize_capacity);
+int vector_resize(Vector *vector, size_t new_capacity);
 
 /**
  * @brief Insert a new element at a given index in the vector.
@@ -226,9 +243,9 @@ int vector_capacity(Vector *vector, size_t *out);
  *
  * This function checks whether the vector currently contains any elements.
  *
- * @param v Pointer to the vector.
- * @return 1 if the vector is empty, 0 if it contains elements, or -1 if v is
- * NULL.
+ * @param vector Pointer to the vector.
+ * @return 1 if the vector is empty, 0 if it contains elements, or -1 if vector
+ * is NULL.
  */
 int vector_empty(Vector *vector);
 
@@ -271,5 +288,97 @@ Vector *vector_map(Vector *vector,
  * vector/function is NULL.
  */
 ssize_t vector_find(Vector *vector, int (*function)(vector_data_t element));
+
+/****************************************************
+ *                                                  *
+ *                 MATH OPERATIONS                  *
+ *                                                  *
+ ****************************************************/
+
+/**
+ * @brief Compute the dot product (scalar product) of two vectors.
+ *
+ * The dot product is calculated as:
+ *   dot = A[0]*B[0] + A[1]*B[1] + ... + A[n-1]*B[n-1]
+ * where both vectors must have the same number of elements.
+ *
+ * @param vector_a Pointer to the first vector.
+ * @param vector_b Pointer to the second vector.
+ * @param out Pointer to a variable where the resulting dot product will be
+ * stored.
+ * @return VECTOR_OK on success.
+ * @return VECTOR_ERR_NULL if any input pointer is NULL.
+ * @return VECTOR_ERR_SIZE if the vectors have different sizes.
+ *
+ * @note If the vectors are empty, the dot product returned will be 0.
+ */
+int vector_dot(Vector *vector_a, Vector *vector_b, vector_data_t *out);
+
+/**
+ * @brief Compute the Euclidean norm (length) of a vector.
+ *
+ * The Euclidean norm is calculated as:
+ *   ||v|| = sqrt(v[0]^2 + v[1]^2 + ... + v[n-1]^2)
+ *
+ * @param vector Pointer to the vector.
+ * @param out Pointer to store the resulting norm.
+ * @return VECTOR_OK on success.
+ * @return VECTOR_ERR_NULL if either pointer is NULL.
+ *
+ * @note If the vector is empty, the returned norm is 0.
+ */
+int vector_norm(Vector *vector, vector_data_t *out);
+
+/**
+ * @brief Add two vectors element-wise.
+ *
+ * Both vectors must have the same number of elements.
+ *
+ * @param vector_a Pointer to the first vector.
+ * @param vector_b Pointer to the second vector.
+ * @return Pointer to a new vector containing the sums on success,
+ *         or NULL if either vector is NULL or sizes differ.
+ */
+Vector *vector_add(Vector *vector_a, Vector *vector_b);
+
+/**
+ * @brief Subtract two vectors element-wise.
+ *
+ * Both vectors must have the same number of elements.
+ *
+ * @param vector_a Pointer to the first vector.
+ * @param vector_b Pointer to the second vector.
+ * @return Pointer to a new vector containing the differences on success,
+ *         or NULL if either vector is NULL or sizes differ.
+ */
+Vector *vector_sub(Vector *vector_a, Vector *vector_b);
+
+/**
+ * @brief Multiply two vectors element-wise.
+ *
+ * Both vectors must have the same number of elements.
+ *
+ * @param vector_a Pointer to the first vector.
+ * @param vector_b Pointer to the second vector.
+ * @return Pointer to a new vector containing the products on success,
+ *         or NULL if either vector is NULL or sizes differ.
+ */
+Vector *vector_mul(Vector *vector_a, Vector *vector_b);
+
+/**
+ * @brief Divide two vectors element-wise.
+ *
+ * Both vectors must have the same number of elements.
+ *
+ * @param vector_a Pointer to the first vector.
+ * @param vector_b Pointer to the second vector.
+ * @return Pointer to a new vector containing the quotients on success,
+ *         or NULL if either vector is NULL, sizes differ, or any element
+ *         of vector_b is zero.
+ *
+ * @note If any element of vector_b is zero, the function returns NULL
+ *       and no partial results are produced.
+ */
+Vector *vector_div(Vector *vector_a, Vector *vector_b);
 
 #endif /* MY_VECTOR_H */

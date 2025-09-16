@@ -36,7 +36,7 @@ void test_vector_empty_null(void) {
 
   // Null vector should return 0
   ret = vector_empty(NULL);
-  TEST_ASSERT_EQUAL_INT(0, ret);
+  TEST_ASSERT_EQUAL_INT(-1, ret);
 }
 
 int main(void) {

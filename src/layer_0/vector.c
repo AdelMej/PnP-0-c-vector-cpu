@@ -1,4 +1,5 @@
 #include "layer_0/vector.h"
+#include <math.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
@@ -336,12 +337,11 @@ int vector_capacity(Vector *v, size_t *out) {
  * @brief Check if the vector is empty.
  *
  * @param v Pointer to the vector.
- * @return 1 if the vector is empty, 0 if it has elements, VECTOR_ERR_NULL if v
- * is NULL.
+ * @return 1 if the vector is empty, 0 if it has elements, -1 if v is NULL.
  */
 int vector_empty(Vector *v) {
   if (v == NULL)
-    return 0;
+    return -1;
 
   return (v->size == 0);
 }
@@ -461,6 +461,9 @@ Vector *vector_map(Vector *v, vector_data_t (*func)(vector_data_t elem)) {
     return NULL;
 
   copy = new_vector(v->capacity);
+  if (copy == NULL)
+    return NULL;
+
   for (i = 0; i < v->size; i++)
     copy->data[i] = func(v->data[i]);
 
@@ -494,4 +497,202 @@ ssize_t vector_find(Vector *v, int (*func)(vector_data_t elem)) {
 
   // no match found
   return -1;
+}
+
+/**
+ * @brief Compute the dot product (scalar product) of two vectors.
+ *
+ * Calculates the sum of the products of corresponding elements:
+ *   result = a[0]*b[0] + a[1]*b[1] + ... + a[n-1]*b[n-1]
+ * Both vectors must have the same number of elements.
+ *
+ * @param v Pointer to the first vector.
+ * @param w Pointer to the second vector.
+ * @param out Pointer to store the resulting dot product.
+ * @return VECTOR_OK on success.
+ * @return VECTOR_ERR_NULL if any pointer is NULL.
+ * @return VECTOR_ERR_SIZE if the vectors have different sizes.
+ *
+ * @note If the vectors are empty, the returned dot product is 0.
+ */
+int vector_dot(Vector *a, Vector *b, vector_data_t *out) {
+  size_t i;
+  vector_data_t result = 0;
+
+  if (a == NULL || b == NULL || out == NULL)
+    return VECTOR_ERR_NULL;
+
+  if (a->size != b->size)
+    return VECTOR_ERR_SIZE;
+
+  for (i = 0; i < a->size; i++)
+    result += a->data[i] * b->data[i];
+
+  *out = result;
+  return VECTOR_OK;
+}
+
+/**
+ * @brief Compute the Euclidean norm (length) of a vector.
+ *
+ * Calculates the L2 norm (magnitude) of the vector:
+ * the square root of the sum of the squares of all elements.
+ *
+ * @param v Pointer to the vector.
+ * @param out Pointer to store the resulting norm.
+ * @return VECTOR_OK on success.
+ * @return VECTOR_ERR_NULL if the vector or output pointer is NULL.
+ *
+ * @note If the vector is empty, the norm returned will be 0.
+ */
+int vector_norm(Vector *v, vector_data_t *out) {
+  size_t i;
+  vector_data_t result = 0;
+
+  if (v == NULL || out == NULL)
+    return VECTOR_ERR_NULL;
+
+  for (i = 0; i < v->size; i++)
+    result += v->data[i] * v->data[i];
+
+  *out = sqrt(result);
+  return VECTOR_OK;
+}
+
+/**
+ * @brief Add two vectors element-wise.
+ *
+ * Allocates a new vector and stores in it the sum of corresponding elements
+ * from `a` and `b`.
+ *
+ * @param a Pointer to the first vector.
+ * @param b Pointer to the second vector.
+ * @return Pointer to the resulting vector on success,
+ *         or NULL if either vector is NULL or their sizes differ.
+ *
+ * @note The resulting vector's capacity is exactly equal to its size.
+ */
+Vector *vector_add(Vector *a, Vector *b) {
+  Vector *result;
+  size_t i;
+
+  if (a == NULL || b == NULL)
+    return NULL;
+
+  if (a->size != b->size)
+    return NULL;
+
+  result = new_vector(a->size);
+  if (result == NULL)
+    return NULL;
+
+  for (i = 0; i < a->size; i++)
+    result->data[i] = a->data[i] + b->data[i];
+
+  return result;
+}
+
+/**
+ * @brief Subtract two vectors element-wise.
+ *
+ * Allocates a new vector and stores in it the difference of corresponding
+ * elements from `a` and `b`.
+ *
+ * @param a Pointer to the first vector.
+ * @param b Pointer to the second vector.
+ * @return Pointer to the resulting vector on success,
+ *         or NULL if either vector is NULL or their sizes differ.
+ *
+ * @note The resulting vector's capacity is exactly equal to its size.
+ */
+Vector *vector_sub(Vector *a, Vector *b) {
+  Vector *result;
+  size_t i;
+
+  if (a == NULL || b == NULL)
+    return NULL;
+
+  if (a->size != b->size)
+    return NULL;
+
+  result = new_vector(a->size);
+  if (result == NULL)
+    return NULL;
+
+  for (i = 0; i < a->size; i++)
+    result->data[i] = a->data[i] - b->data[i];
+
+  return result;
+}
+
+/**
+ * @brief Multiply two vectors element-wise.
+ *
+ * Allocates a new vector and stores in it the product of corresponding
+ * elements from `a` and `b`.
+ *
+ * @param a Pointer to the first vector.
+ * @param b Pointer to the second vector.
+ * @return Pointer to the resulting vector on success,
+ *         or NULL if either vector is NULL or their sizes differ.
+ *
+ * @note The resulting vector's capacity is exactly equal to its size.
+ */
+Vector *vector_mul(Vector *a, Vector *b) {
+  Vector *result;
+  size_t i;
+
+  if (a == NULL || b == NULL)
+    return NULL;
+
+  if (a->size != b->size)
+    return NULL;
+
+  result = new_vector(a->size);
+  if (result == NULL)
+    return NULL;
+
+  for (i = 0; i < a->size; i++)
+    result->data[i] = a->data[i] * b->data[i];
+
+  return result;
+}
+
+/**
+ * @brief Divide two vectors element-wise.
+ *
+ * Allocates a new vector and stores in it the quotient of corresponding
+ * elements from `a` and `b`.
+ *
+ * @param a Pointer to the numerator vector.
+ * @param b Pointer to the denominator vector.
+ * @return Pointer to the resulting vector on success,
+ *         or NULL if either vector is NULL, their sizes differ,
+ *         or if division by zero occurs.
+ *
+ * @note The resulting vector's capacity is exactly equal to its size.
+ */
+Vector *vector_div(Vector *a, Vector *b) {
+  Vector *result;
+  size_t i;
+
+  if (a == NULL || b == NULL)
+    return NULL;
+
+  if (a->size != b->size)
+    return NULL;
+
+  result = new_vector(a->size);
+  if (result == NULL)
+    return NULL;
+
+  for (i = 0; i < a->size; i++) {
+    if (b->data[i] == 0.0) {
+      vector_free(result);
+      return (NULL);
+    }
+    result->data[i] = a->data[i] / b->data[i];
+  }
+
+  return result;
 }
