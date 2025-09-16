@@ -10,6 +10,7 @@
 #define MY_VECTOR_H
 
 #include <stddef.h>
+#include <sys/types.h>
 
 /** @name Vector error codes */
 //@{
@@ -230,5 +231,45 @@ int vector_capacity(Vector *vector, size_t *out);
  * NULL.
  */
 int vector_empty(Vector *vector);
+
+/****************************************************
+ *                                                  *
+ *                ITERATORS / TRANSFORMS            *
+ *                                                  *
+ ****************************************************/
+
+/**
+ * @brief Apply a function to each element of the vector.
+ *
+ * @param vector Pointer to the vector.
+ * @param function Function to apply to each element. Receives a pointer to the
+ * element.
+ * @return VECTOR_OK on success, VECTOR_ERR_NULL if vector or function is NULL.
+ */
+int vector_foreach(Vector *vector, void (*function)(vector_data_t *element));
+
+/**
+ * @brief Create a new vector by applying a function to each element of an
+ * existing vector.
+ *
+ * @param vector Pointer to the original vector.
+ * @param function Function to apply to each element. Receives element by value
+ * and returns the transformed value.
+ * @return Pointer to a newly allocated vector with transformed elements, or
+ * NULL if allocation fails or vector/function is NULL.
+ */
+Vector *vector_map(Vector *vector,
+                   vector_data_t (*function)(vector_data_t element));
+
+/**
+ * @brief Find the index of the first element that satisfies a condition.
+ *
+ * @param vector Pointer to the vector.
+ * @param function Function that returns non-zero if the element matches the
+ * condition.
+ * @return Index of the first matching element, or -1 if none match or if
+ * vector/function is NULL.
+ */
+ssize_t vector_find(Vector *vector, int (*function)(vector_data_t element));
 
 #endif /* MY_VECTOR_H */

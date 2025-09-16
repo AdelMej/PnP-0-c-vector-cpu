@@ -2,6 +2,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/types.h>
 
 /**
  * @brief Creates a new dynamic vector.
@@ -412,4 +413,85 @@ int vector_remove(Vector *v, size_t idx) {
   v->size--;
 
   return VECTOR_OK;
+}
+
+/**
+ * @brief Apply a function to each element of the vector.
+ *
+ * This function iterates over all elements in the vector and applies
+ * the given function to each element in-place.
+ *
+ * @param v Pointer to the vector.
+ * @param func Function pointer that takes a pointer to an element.
+ *             This function is applied to each element.
+ * @return VECTOR_OK on success, VECTOR_ERR_NULL if v or func is NULL.
+ */
+int vector_foreach(Vector *v, void (*func)(vector_data_t *elem)) {
+  size_t i;
+
+  if (v == NULL || func == NULL)
+    return VECTOR_ERR_NULL;
+
+  for (i = 0; i < v->size; i++)
+    func(&v->data[i]);
+
+  return VECTOR_OK;
+}
+
+/**
+ * @brief Create a new vector by applying a function to each element of an
+ * existing vector.
+ *
+ * This function allocates a new vector with the same capacity as the input
+ * vector and fills it with the results of applying the given function to each
+ * element.
+ *
+ * @param v Pointer to the source vector. Must not be NULL.
+ * @param func Function pointer to a mapping function that takes a vector_data_t
+ *             and returns a transformed vector_data_t. Must not be NULL.
+ * @return Pointer to the newly created vector with transformed elements, or
+ *         NULL if the input vector or function pointer is NULL, or if
+ * allocation fails.
+ */
+Vector *vector_map(Vector *v, vector_data_t (*func)(vector_data_t elem)) {
+  Vector *copy;
+  size_t i;
+
+  if (v == NULL || func == NULL)
+    return NULL;
+
+  copy = new_vector(v->capacity);
+  for (i = 0; i < v->size; i++)
+    copy->data[i] = func(v->data[i]);
+
+  copy->size = v->size;
+  return copy;
+}
+
+/**
+ * @brief Find the index of the first element matching a given condition.
+ *
+ * This function iterates through the vector and applies the user-provided
+ * predicate function to each element. If the predicate returns non-zero,
+ * the corresponding index is returned immediately.
+ *
+ * @param v Pointer to the vector.
+ * @param func Predicate function that takes an element and returns non-zero if
+ * it matches.
+ * @return Index of the first matching element on success, -1 if no match is
+ * found or if @p v or @p func are NULL.
+ */
+ssize_t vector_find(Vector *v, int (*func)(vector_data_t elem)) {
+  size_t i;
+
+  if (v == NULL || func == NULL)
+    return -1;
+
+  for (i = 0; i < v->size; i++) {
+    if (func(v->data[i]))
+      return (ssize_t)i;
+  }
+
+  // no match found
+  return -1;
 }
