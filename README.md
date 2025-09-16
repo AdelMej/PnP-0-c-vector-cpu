@@ -13,7 +13,7 @@ A fast, lightweight, and thoroughly tested dynamic vector library in C for numer
 ## Installation / Build
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/AdelMej/PnP-0-c-vector-cpu
 cd PnP-0-c-vector-cpu
 mkdir build
 cd build
