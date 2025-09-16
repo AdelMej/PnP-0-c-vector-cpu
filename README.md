@@ -1,8 +1,20 @@
-# C Dynamic Vector Library
+```
+_                                  _____                       _                                    
+| |                                |  _  |                     | |                                   
+| |     __ _ _   _  ___ _ __ ______| |/' |________   _____  ___| |_ ___  _ __ ______ ___ _ __  _   _ 
+| |    / _` | | | |/ _ \ '__|______|  /| |______\ \ / / _ \/ __| __/ _ \| '__|______/ __| '_ \| | | |
+| |___| (_| | |_| |  __/ |         \ |_/ /       \ V /  __/ (__| || (_) | |        | (__| |_) | |_| |
+\_____/\__,_|\__, |\___|_|          \___/         \_/ \___|\___|\__\___/|_|         \___| .__/ \__,_|
+              __/ |                                                                     | |          
+             |___/                                                                      |_|          
+```
 
-A fast, lightweight, and thoroughly tested dynamic vector library in C for numerical computations.
+# 🚀 PnP-0-C-Vector-CPU
 
-## Features
+A 🔥 lightweight, dynamic vector library in C for numerical computations.  
+Think **`std::vector`**, but with **unit tests**, **math ops**, and **all the fun** 😏
+
+## ⚙️Features
 
 - Resizable dynamic arrays for `double` elements (`vector_data_t`).
 - Standard operations: push, pop, insert, remove, clear.
@@ -10,7 +22,7 @@ A fast, lightweight, and thoroughly tested dynamic vector library in C for numer
 - Safe: handles NULL pointers, size mismatches, and division by zero.
 - Fully unit tested with Unity (100% tests passing 😎).
 
-## Installation / Build
+## 🛠️Installation / Build
 
 ```bash
 git clone https://github.com/AdelMej/PnP-0-c-vector-cpu
@@ -19,13 +31,14 @@ mkdir build
 cd build
 cmake ..
 make
+ctest   # all 23 tests should pass ✅
 ```
 
 - `cmake` .. generates the Makefiles.
 - `make` compiles the library and tests.
 - `ctest` runs all unit tests (23 passing tests expected 😏).
 
-## Usage Example
+## 📝 Usage Example
 
 ```c
 #include "layer_0/vector.h"
@@ -43,11 +56,11 @@ int main() {
 }
 ```
 
-## API Overview
+## 📦 API Overview
 
 All functions are declared in `layer_0/vector.h`. Most functions return an `int` status code (`VECTOR_OK`, `VECTOR_ERR_NULL`, `VECTOR_ERR_OOB`, etc.) or a pointer to a new vector.
 
-### Vector Creation & Memory Management
+### 🛠️Vector Creation & Memory Management
 
 | Function | Description |
 |----------|-------------|
@@ -55,7 +68,7 @@ All functions are declared in `layer_0/vector.h`. Most functions return an `int`
 | `void vector_free(Vector *v)` | Free the vector and its allocated memory. |
 | `Vector *vector_copy(Vector *v)` | Create a deep copy of a vector. |
 
-### Element Access & Modification
+### 🔹Element Access & Modification
 
 | Function | Description |
 |----------|-------------|
@@ -70,7 +83,7 @@ All functions are declared in `layer_0/vector.h`. Most functions return an `int`
 | `int vector_capacity(Vector *v, size_t *out)` | Get allocated capacity. |
 | `int vector_empty(Vector *v)` | Returns 1 if empty, 0 if not, -1 if NULL. |
 
-### Iterators & Transformations
+### 🔄 Iterators & Transformations
 
 | Function | Description |
 |----------|-------------|
@@ -78,7 +91,7 @@ All functions are declared in `layer_0/vector.h`. Most functions return an `int`
 | `Vector *vector_map(Vector *v, vector_data_t (*func)(vector_data_t))` | Return a new vector with a function applied to each element. |
 | `ssize_t vector_find(Vector *v, int (*func)(vector_data_t))` | Return the index of the first element satisfying a condition, -1 if none or NULL. |
 
-### Math Operations
+### ➗ Math Operations
 
 | Function | Description |
 |----------|-------------|
