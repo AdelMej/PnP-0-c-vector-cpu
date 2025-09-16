@@ -39,6 +39,7 @@ void test_vector_get_invalid_index(void) {
   vector_data_t val;
   TEST_ASSERT_EQUAL(VECTOR_ERR_OOB, vector_get(test, 5, &val));
 }
+
 int main(void) {
   UNITY_BEGIN();
   RUN_TEST(test_vector_get_basic);

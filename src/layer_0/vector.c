@@ -344,3 +344,72 @@ int vector_empty(Vector *v) {
 
   return (v->size == 0);
 }
+
+/**
+ * @brief Insert a value at a specified index in the vector.
+ *
+ * Shifts all elements starting at the index one position to the right.
+ * If the vector's capacity is exceeded, it is automatically grown.
+ *
+ * @param v Pointer to the vector.
+ * @param idx Index at which to insert the value (0 <= idx <= size).
+ * @param value The value to insert.
+ * @return VECTOR_OK on success,
+ *         VECTOR_ERR_NULL if the vector is NULL,
+ *         VECTOR_ERR_OOB if the index is out of bounds,
+ *         VECTOR_ERR_ALLOC if memory allocation fails during growth.
+ */
+int vector_insert(Vector *v, size_t idx, vector_data_t value) {
+  vector_data_t *temp;
+  size_t i;
+
+  if (v == NULL)
+    return VECTOR_ERR_NULL;
+  if (idx >= v->size)
+    return VECTOR_ERR_OOB;
+
+  if (v->size + 1 > v->capacity) {
+    temp = realloc(v->data,
+                   sizeof(vector_data_t) * v->capacity * VECTOR_GROWTH_FACTOR);
+    if (temp == NULL)
+      return VECTOR_ERR_ALLOC;
+    v->data = temp;
+    v->capacity *= VECTOR_GROWTH_FACTOR;
+  }
+
+  for (i = v->size; i > idx; i--)
+    v->data[i] = v->data[i - 1];
+
+  v->data[idx] = value;
+  v->size++;
+
+  return VECTOR_OK;
+}
+
+/**
+ * @brief Remove an element at a specific index from the vector.
+ *
+ * Shifts all elements after the index one position to the left.
+ *
+ * @param v Pointer to the vector.
+ * @param idx Index of the element to remove.
+ * @return VECTOR_OK on success,
+ *         VECTOR_ERR_NULL if the vector is NULL,
+ *         VECTOR_ERR_OOB if the index is out of bounds.
+ */
+int vector_remove(Vector *v, size_t idx) {
+  size_t i;
+
+  if (v == NULL)
+    return VECTOR_ERR_NULL;
+
+  if (idx >= v->size)
+    return VECTOR_ERR_OOB;
+
+  for (i = idx; i < v->size - 1; i++)
+    v->data[i] = v->data[i + 1];
+
+  v->size--;
+
+  return VECTOR_OK;
+}

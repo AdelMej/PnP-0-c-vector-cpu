@@ -164,6 +164,31 @@ Vector *vector_copy(Vector *vector);
  */
 int vector_resize(Vector *vector, size_t resize_capacity);
 
+/**
+ * @brief Insert a new element at a given index in the vector.
+ *
+ * Shifts elements after the index to the right. If the vector's capacity
+ * is reached, it will be resized automatically.
+ *
+ * @param vector Pointer to the vector.
+ * @param index Position at which to insert the element.
+ * @param value The value to insert.
+ * @return VECTOR_OK on success, VECTOR_ERR_NULL if vector is NULL,
+ *         VECTOR_ERR_OOB if index is out of bounds, VECTOR_ERR_ALLOC if memory
+ * allocation fails.
+ */
+int vector_insert(Vector *vector, size_t index, vector_data_t value);
+
+/**
+ * @brief Remove an element at a given index from the vector.
+ *
+ * @param vector Pointer to the vector.
+ * @param index Position of the element to remove.
+ * @return VECTOR_OK on success, VECTOR_ERR_NULL if vector is NULL,
+ *         VECTOR_ERR_OOB if index is out of bounds.
+ */
+int vector_remove(Vector *vector, size_t index);
+
 /****************************************************
  *                                                  *
  *                 QUERY / ACCESSORS                *
