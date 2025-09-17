@@ -36,26 +36,12 @@
 typedef double vector_data_t;
 
 /**
- * @struct Vector
- * @brief Dynamic array structure for storing numerical data.
+ * @brief Dynamic array of elements.
  *
- * The `Vector` struct represents a resizable array of elements of type
- * `vector_data_t` (currently defined as `double`). It tracks both the
- * number of elements currently stored and the total allocated capacity.
- * This structure is used with the dynamic vector library functions to
- * perform operations like push, pop, insert, remove, and mathematical
- * computations.
+ * Represents a resizable array of `vector_data_t` elements.
+ * Tracks the number of elements (`size`) and allocated capacity (`capacity`).
  *
- * @var Vector::data
- * Pointer to the dynamically allocated array holding the elements.
- *
- * @var Vector::size
- * The current number of elements stored in the vector. Always <= capacity.
- *
- * @var Vector::capacity
- * The total number of elements the vector can hold without resizing.
- * When capacity is reached, the vector can be automatically resized
- * according to VECTOR_GROWTH_FACTOR.
+ * @note Always use @ref vector_free to release the allocated memory.
  */
 typedef struct {
   vector_data_t
