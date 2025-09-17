@@ -6,8 +6,8 @@ Vector *a;
 Vector *b;
 
 void setUp(void) {
-  a = new_vector(4);
-  b = new_vector(4);
+  a = vector_new(4);
+  b = vector_new(4);
   TEST_ASSERT_NOT_NULL(a);
   TEST_ASSERT_NOT_NULL(b);
 
@@ -42,7 +42,7 @@ void test_vector_dot_null(void) {
 }
 
 void test_vector_dot_size_missmatch(void) {
-  Vector *c = new_vector(2); // smaller vector
+  Vector *c = vector_new(2); // smaller vector
   vector_push(c, 1.0);
   vector_push(c, 2.0);
 
@@ -56,8 +56,8 @@ void test_vector_dot_size_missmatch(void) {
 }
 
 void test_vector_dot_empty(void) {
-  Vector *empty1 = new_vector(1);
-  Vector *empty2 = new_vector(1);
+  Vector *empty1 = vector_new(1);
+  Vector *empty2 = vector_new(1);
   vector_data_t result;
 
   TEST_ASSERT_NOT_NULL(empty1);

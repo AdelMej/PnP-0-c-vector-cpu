@@ -5,7 +5,7 @@
 Vector *test;
 
 void setUp(void) {
-  test = new_vector(4);
+  test = vector_new(4);
   TEST_ASSERT_NOT_NULL(test);
   // Push some initial values
   vector_push(test, 1.0);

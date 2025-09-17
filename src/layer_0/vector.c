@@ -17,28 +17,28 @@
  * @note The returned vector must be freed with vector_free() to avoid memory
  * leaks.
  */
-Vector *new_vector(size_t initial_capacity) {
-  Vector *new_vector;
+Vector *vector_new(size_t initial_capacity) {
+  Vector *vector_new;
   if (initial_capacity <= 0)
     return (NULL);
 
-  // initialization of new_vector
-  new_vector = malloc(sizeof(Vector));
-  if (new_vector == NULL)
+  // initialization of vector_new
+  vector_new = malloc(sizeof(Vector));
+  if (vector_new == NULL)
     return (NULL);
 
   // intitialization of data structure zeroed
-  new_vector->data = calloc(initial_capacity, sizeof(vector_data_t));
-  if (new_vector->data == NULL) {
-    free(new_vector);
+  vector_new->data = calloc(initial_capacity, sizeof(vector_data_t));
+  if (vector_new->data == NULL) {
+    free(vector_new);
     return (NULL);
   }
 
   // initialization of capacity and size
-  new_vector->capacity = initial_capacity;
-  new_vector->size = 0;
+  vector_new->capacity = initial_capacity;
+  vector_new->size = 0;
 
-  return (new_vector);
+  return (vector_new);
 }
 
 /**
@@ -460,7 +460,7 @@ Vector *vector_map(Vector *v, vector_data_t (*func)(vector_data_t elem)) {
   if (v == NULL || func == NULL)
     return NULL;
 
-  copy = new_vector(v->capacity);
+  copy = vector_new(v->capacity);
   if (copy == NULL)
     return NULL;
 
@@ -582,7 +582,7 @@ Vector *vector_add(Vector *a, Vector *b) {
   if (a->size != b->size)
     return NULL;
 
-  result = new_vector(a->size);
+  result = vector_new(a->size);
   if (result == NULL)
     return NULL;
 
@@ -615,7 +615,7 @@ Vector *vector_sub(Vector *a, Vector *b) {
   if (a->size != b->size)
     return NULL;
 
-  result = new_vector(a->size);
+  result = vector_new(a->size);
   if (result == NULL)
     return NULL;
 
@@ -648,7 +648,7 @@ Vector *vector_mul(Vector *a, Vector *b) {
   if (a->size != b->size)
     return NULL;
 
-  result = new_vector(a->size);
+  result = vector_new(a->size);
   if (result == NULL)
     return NULL;
 
@@ -682,7 +682,7 @@ Vector *vector_div(Vector *a, Vector *b) {
   if (a->size != b->size)
     return NULL;
 
-  result = new_vector(a->size);
+  result = vector_new(a->size);
   if (result == NULL)
     return NULL;
 

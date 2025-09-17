@@ -61,7 +61,7 @@ typedef struct {
  * @param initial_capacity Number of elements to allocate initially
  * @return Pointer to the new vector, or NULL if allocation fails
  */
-Vector *new_vector(size_t initial_capacity);
+Vector *vector_new(size_t initial_capacity);
 
 /**
  * @brief Frees a vector and its contents

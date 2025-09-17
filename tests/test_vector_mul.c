@@ -6,8 +6,8 @@ Vector *a;
 Vector *b;
 
 void setUp(void) {
-  a = new_vector(3);
-  b = new_vector(3);
+  a = vector_new(3);
+  b = vector_new(3);
   TEST_ASSERT_NOT_NULL(a);
   TEST_ASSERT_NOT_NULL(b);
 
@@ -44,7 +44,7 @@ void test_vector_mul_null(void) {
 
 /* Size mismatch handling */
 void test_vector_mul_size_mismatch(void) {
-  Vector *c = new_vector(2);
+  Vector *c = vector_new(2);
   TEST_ASSERT_NOT_NULL(c);
   TEST_ASSERT_NULL(vector_mul(a, c));
   TEST_ASSERT_NULL(vector_mul(c, b));

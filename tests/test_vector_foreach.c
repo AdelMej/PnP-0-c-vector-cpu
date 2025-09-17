@@ -8,7 +8,7 @@ static double sum;
 static void add_to_sum(vector_data_t *elem) { sum += *elem; }
 
 void setUp(void) {
-  test = new_vector(12);
+  test = vector_new(12);
   TEST_ASSERT_NOT_NULL(test);
   // Push some initial values
   vector_push(test, 1.0);

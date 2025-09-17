@@ -6,8 +6,8 @@ Vector *a;
 Vector *b;
 
 void setUp(void) {
-  a = new_vector(3);
-  b = new_vector(3);
+  a = vector_new(3);
+  b = vector_new(3);
   TEST_ASSERT_NOT_NULL(a);
   TEST_ASSERT_NOT_NULL(b);
 
@@ -43,7 +43,7 @@ void test_vector_div_null(void) {
 }
 
 void test_vector_div_size_mismatch(void) {
-  Vector *c = new_vector(2);
+  Vector *c = vector_new(2);
   vector_push(c, 1.0);
   vector_push(c, 2.0);
 
@@ -54,8 +54,8 @@ void test_vector_div_size_mismatch(void) {
 }
 
 void test_vector_div_zero(void) {
-  Vector *x = new_vector(3);
-  Vector *y = new_vector(3);
+  Vector *x = vector_new(3);
+  Vector *y = vector_new(3);
   x->data[0] = 1.0;
   x->data[1] = 2.0;
   x->data[2] = 3.0;

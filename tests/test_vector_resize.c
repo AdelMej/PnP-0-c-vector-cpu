@@ -5,7 +5,7 @@
 Vector *test;
 
 void setUp(void) {
-  test = new_vector(4);
+  test = vector_new(4);
   TEST_ASSERT_NOT_NULL(test);
   // Push some initial values
   vector_push(test, 1.0);
@@ -39,7 +39,7 @@ void test_vector_resize_shrink(void) {
 
 void test_vector_resize_zero(void) {
   // Valid vector
-  Vector *v = new_vector(4);
+  Vector *v = vector_new(4);
   TEST_ASSERT_NOT_NULL(v);
 
   // Try resizing to 0 → should fail

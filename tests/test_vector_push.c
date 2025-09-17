@@ -5,7 +5,7 @@
 static Vector *test;
 
 void setUp(void) {
-  test = new_vector(1);
+  test = vector_new(1);
   TEST_ASSERT_NOT_NULL(test);
 }
 
