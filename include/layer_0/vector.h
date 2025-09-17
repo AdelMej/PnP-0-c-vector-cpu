@@ -44,10 +44,10 @@ typedef double vector_data_t;
  * @note Always use @ref vector_free to release the allocated memory.
  */
 typedef struct {
-  vector_data_t
-      *data;   /**< Pointer to the dynamically allocated array of elements */
-  size_t size; /**< Current number of elements stored in the vector */
-  size_t capacity; /**< Total allocated capacity of the vector */
+    vector_data_t
+        *data;   /**< Pointer to the dynamically allocated array of elements */
+    size_t size; /**< Current number of elements stored in the vector */
+    size_t capacity; /**< Total allocated capacity of the vector */
 } Vector;
 
 /****************************************************
