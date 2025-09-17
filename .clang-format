@@ -1,0 +1,10 @@
+# C Betty style: aligns with Holberton Betty linter
+BasedOnStyle: Google
+IndentWidth: 4
+TabWidth: 4
+UseTab: ForIndentation     # tabs for indentation (Betty requires this)
+ColumnLimit: 80
+BreakBeforeBraces: Allman  # braces on new line (Betty enforces this)
+AllowShortFunctionsOnASingleLine: false
+PointerAlignment: Left
+
