@@ -9,6 +9,10 @@
 /*.out
 /.cache/
 
+#cmake build artifacts
+/__cmake_systeminformation/
+compile_commands.json
+
 # Unity test build artifacts
 /tests/Unity/*.o
 /tests/Unity/run_tests

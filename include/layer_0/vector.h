@@ -44,8 +44,8 @@ typedef double vector_data_t;
  * @note Always use @ref vector_free to release the allocated memory.
  */
 typedef struct {
-    vector_data_t
-        *data;   /**< Pointer to the dynamically allocated array of elements */
+    vector_data_t*
+        data;    /**< Pointer to the dynamically allocated array of elements */
     size_t size; /**< Current number of elements stored in the vector */
     size_t capacity; /**< Total allocated capacity of the vector */
 } Vector;
@@ -61,13 +61,13 @@ typedef struct {
  * @param initial_capacity Number of elements to allocate initially
  * @return Pointer to the new vector, or NULL if allocation fails
  */
-Vector *vector_new(size_t initial_capacity);
+Vector* vector_new(size_t initial_capacity);
 
 /**
  * @brief Frees a vector and its contents
  * @param vector Pointer to the vector
  */
-void vector_free(Vector *vector);
+void vector_free(Vector* vector);
 
 /****************************************************
  *                                                  *
@@ -83,7 +83,7 @@ void vector_free(Vector *vector);
  * @return VECTOR_ERR_NULL if the vector pointer is NULL
  * @return VECTOR_ERR_ALLOC if memory allocation fails during resizing
  */
-int vector_push(Vector *vector, vector_data_t data);
+int vector_push(Vector* vector, vector_data_t data);
 
 /**
  * @brief Sets the element at a specific index in the vector
@@ -94,7 +94,7 @@ int vector_push(Vector *vector, vector_data_t data);
  * @return VECTOR_ERR_NULL if the vector pointer is NULL
  * @return VECTOR_ERR_OOB if the index is out of bounds
  */
-int vector_set(Vector *vector, size_t index, vector_data_t data);
+int vector_set(Vector* vector, size_t index, vector_data_t data);
 
 /**
  * @brief Gets the element at a specific index
@@ -106,7 +106,7 @@ int vector_set(Vector *vector, size_t index, vector_data_t data);
  * @return VECTOR_ERR_NULL if vector or out pointer is NULL
  * @return VECTOR_ERR_OOB if index is out of bounds
  */
-int vector_get(Vector *vector, size_t index, vector_data_t *out);
+int vector_get(Vector* vector, size_t index, vector_data_t* out);
 
 /**
  * @brief Removes and returns the last element in the vector
@@ -117,7 +117,7 @@ int vector_get(Vector *vector, size_t index, vector_data_t *out);
  * @return VECTOR_ERR_NULL if vector or out pointer is NULL
  * @return VECTOR_ERR_OOB if vector is empty
  */
-int vector_pop(Vector *vector, vector_data_t *out);
+int vector_pop(Vector* vector, vector_data_t* out);
 
 /**
  * @brief Returns the last element without removing it
@@ -128,7 +128,7 @@ int vector_pop(Vector *vector, vector_data_t *out);
  * @return VECTOR_ERR_NULL if vector or out pointer is NULL
  * @return VECTOR_ERR_OOB if vector is empty
  */
-int vector_back(Vector *vector, vector_data_t *out);
+int vector_back(Vector* vector, vector_data_t* out);
 
 /**
  * @brief Clears all elements from the vector
@@ -140,7 +140,7 @@ int vector_back(Vector *vector, vector_data_t *out);
  * @return VECTOR_OK on success
  * @return VECTOR_ERR_NULL if the vector pointer is NULL
  */
-int vector_clear(Vector *vector);
+int vector_clear(Vector* vector);
 
 /**
  * @brief Creates a copy of a vector
@@ -151,7 +151,7 @@ int vector_clear(Vector *vector);
  * @return Pointer to the new vector on success
  * @return NULL if the source vector is NULL or memory allocation fails
  */
-Vector *vector_copy(Vector *vector);
+Vector* vector_copy(Vector* vector);
 
 /**
  * @brief Resizes the vector to a new capacity
@@ -166,7 +166,7 @@ Vector *vector_copy(Vector *vector);
  * @return VECTOR_ERR_NULL if the vector pointer is NULL
  * @return VECTOR_ERR_ALLOC if memory allocation fails
  */
-int vector_resize(Vector *vector, size_t new_capacity);
+int vector_resize(Vector* vector, size_t new_capacity);
 
 /**
  * @brief Insert a new element at a given index in the vector.
@@ -181,7 +181,7 @@ int vector_resize(Vector *vector, size_t new_capacity);
  *         VECTOR_ERR_OOB if index is out of bounds, VECTOR_ERR_ALLOC if memory
  * allocation fails.
  */
-int vector_insert(Vector *vector, size_t index, vector_data_t value);
+int vector_insert(Vector* vector, size_t index, vector_data_t value);
 
 /**
  * @brief Remove an element at a given index from the vector.
@@ -191,7 +191,7 @@ int vector_insert(Vector *vector, size_t index, vector_data_t value);
  * @return VECTOR_OK on success, VECTOR_ERR_NULL if vector is NULL,
  *         VECTOR_ERR_OOB if index is out of bounds.
  */
-int vector_remove(Vector *vector, size_t index);
+int vector_remove(Vector* vector, size_t index);
 
 /****************************************************
  *                                                  *
@@ -209,7 +209,7 @@ int vector_remove(Vector *vector, size_t index);
  * @param out Pointer to a size_t variable where the vector size will be stored.
  * @return VECTOR_OK on success, VECTOR_ERR_NULL if the vector pointer is NULL.
  */
-int vector_size(Vector *vector, size_t *out);
+int vector_size(Vector* vector, size_t* out);
 
 /**
  * @brief Get the current capacity of the vector.
@@ -222,7 +222,7 @@ int vector_size(Vector *vector, size_t *out);
  * @return VECTOR_OK (0) on success, or VECTOR_ERR_NULL if the vector pointer is
  * NULL.
  */
-int vector_capacity(Vector *vector, size_t *out);
+int vector_capacity(Vector* vector, size_t* out);
 
 /**
  * @brief Check if the vector is empty.
@@ -233,7 +233,7 @@ int vector_capacity(Vector *vector, size_t *out);
  * @return 1 if the vector is empty, 0 if it contains elements, or -1 if vector
  * is NULL.
  */
-int vector_empty(Vector *vector);
+int vector_empty(Vector* vector);
 
 /****************************************************
  *                                                  *
@@ -249,7 +249,7 @@ int vector_empty(Vector *vector);
  * element.
  * @return VECTOR_OK on success, VECTOR_ERR_NULL if vector or function is NULL.
  */
-int vector_foreach(Vector *vector, void (*function)(vector_data_t *element));
+int vector_foreach(Vector* vector, void (*function)(vector_data_t* element));
 
 /**
  * @brief Create a new vector by applying a function to each element of an
@@ -261,7 +261,7 @@ int vector_foreach(Vector *vector, void (*function)(vector_data_t *element));
  * @return Pointer to a newly allocated vector with transformed elements, or
  * NULL if allocation fails or vector/function is NULL.
  */
-Vector *vector_map(Vector *vector,
+Vector* vector_map(Vector* vector,
                    vector_data_t (*function)(vector_data_t element));
 
 /**
@@ -273,7 +273,7 @@ Vector *vector_map(Vector *vector,
  * @return Index of the first matching element, or -1 if none match or if
  * vector/function is NULL.
  */
-ssize_t vector_find(Vector *vector, int (*function)(vector_data_t element));
+ssize_t vector_find(Vector* vector, int (*function)(vector_data_t element));
 
 /****************************************************
  *                                                  *
@@ -298,7 +298,7 @@ ssize_t vector_find(Vector *vector, int (*function)(vector_data_t element));
  *
  * @note If the vectors are empty, the dot product returned will be 0.
  */
-int vector_dot(Vector *vector_a, Vector *vector_b, vector_data_t *out);
+int vector_dot(Vector* vector_a, Vector* vector_b, vector_data_t* out);
 
 /**
  * @brief Compute the Euclidean norm (length) of a vector.
@@ -313,7 +313,7 @@ int vector_dot(Vector *vector_a, Vector *vector_b, vector_data_t *out);
  *
  * @note If the vector is empty, the returned norm is 0.
  */
-int vector_norm(Vector *vector, vector_data_t *out);
+int vector_norm(Vector* vector, vector_data_t* out);
 
 /**
  * @brief Add two vectors element-wise.
@@ -325,7 +325,7 @@ int vector_norm(Vector *vector, vector_data_t *out);
  * @return Pointer to a new vector containing the sums on success,
  *         or NULL if either vector is NULL or sizes differ.
  */
-Vector *vector_add(Vector *vector_a, Vector *vector_b);
+Vector* vector_add(Vector* vector_a, Vector* vector_b);
 
 /**
  * @brief Subtract two vectors element-wise.
@@ -337,7 +337,7 @@ Vector *vector_add(Vector *vector_a, Vector *vector_b);
  * @return Pointer to a new vector containing the differences on success,
  *         or NULL if either vector is NULL or sizes differ.
  */
-Vector *vector_sub(Vector *vector_a, Vector *vector_b);
+Vector* vector_sub(Vector* vector_a, Vector* vector_b);
 
 /**
  * @brief Multiply two vectors element-wise.
@@ -349,7 +349,7 @@ Vector *vector_sub(Vector *vector_a, Vector *vector_b);
  * @return Pointer to a new vector containing the products on success,
  *         or NULL if either vector is NULL or sizes differ.
  */
-Vector *vector_mul(Vector *vector_a, Vector *vector_b);
+Vector* vector_mul(Vector* vector_a, Vector* vector_b);
 
 /**
  * @brief Divide two vectors element-wise.
@@ -365,6 +365,6 @@ Vector *vector_mul(Vector *vector_a, Vector *vector_b);
  * @note If any element of vector_b is zero, the function returns NULL
  *       and no partial results are produced.
  */
-Vector *vector_div(Vector *vector_a, Vector *vector_b);
+Vector* vector_div(Vector* vector_a, Vector* vector_b);
 
 #endif /* MY_VECTOR_H */
